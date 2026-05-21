@@ -1,5 +1,5 @@
 {
-  "heroTitle": "✅ 全程温控 · 安心直达",
+  "heroTitle": "全程温控 · 安心直达",
   "heroDesc": "恒通冷链，专注冷链物流服务，从仓储到配送全程温控可追溯，让每一份托付都安全抵达",
   "heroBtn1": "了解服务",
   "heroBtn2": "联系我们",
@@ -17,7 +17,7 @@
   "stat3": 50,
   "stat4": 100000,
   "aboutTitle": "关于恒通冷链",
-  "aboutContent": "恒通冷链物流有限公司，专注于冷链物流服务领域。\n\n公司拥有现代化的冷链仓储设施和专业冷链运输车队。",
+  "aboutContent": "恒通冷链物流有限公司，专注于冷链物流服务领域。\n\n公司拥有现代化冷链仓储设施和专业冷链运输车队，配备先进的温控管理系统，实现全流程温度实时监控与追溯。\n\n我们始终坚持以客户需求为导向，以品质服务为核心，为生鲜食品、医药制品等温度敏感型产品提供一站式冷链物流服务。",
   "adv1": "全链条温控",
   "adv2": "实时监控系统",
   "adv3": "专业运营团队",
@@ -26,7 +26,7 @@
     {
       "icon": "🚛",
       "title": "冷链运输",
-      "desc": "覆盖全国的冷链干线运输网络。",
+      "desc": "覆盖全国的冷链干线运输网络，多温区运输能力，GPS实时定位追踪，确保货物全程温控。",
       "tags": [
         "干线运输",
         "支线配送",
@@ -36,46 +36,49 @@
     {
       "icon": "🏭",
       "title": "冷库仓储",
-      "desc": "现代化冷链仓储设施。",
+      "desc": "现代化冷链仓储设施，提供冷冻、冷藏、恒温等多温区仓储服务。",
       "tags": [
         "冷冻仓储",
-        "冷藏仓储"
+        "冷藏仓储",
+        "恒温存储"
       ]
     },
     {
       "icon": "🚚",
       "title": "城市配送",
-      "desc": "城市冷链配送网络。",
+      "desc": "覆盖各主要城市的冷链配送网络，B端门店直达配送，准时高效。",
       "tags": [
         "门店配送",
-        "电商配送"
+        "电商配送",
+        "定时达"
       ]
     },
     {
       "icon": "📦",
       "title": "增值服务",
-      "desc": "提供分拣包装贴标等一站式服务。",
+      "desc": "提供分拣、包装、贴标、追溯等一站式增值服务，满足客户多元化需求。",
       "tags": [
         "分拣包装",
-        "溯源服务"
+        "溯源服务",
+        "定制方案"
       ]
     }
   ],
   "news": [
     {
       "date": "2026-05-22",
-      "title": "✅ 测试：恒通冷链官网正式上线运营",
-      "desc": "经过精心筹备，恒通冷链官方网站今日正式上线。"
+      "title": "恒通冷链官网正式上线运营",
+      "desc": "经过精心筹备，恒通冷链官方网站今日正式上线，为客户提供便捷的线上服务窗口和资讯获取渠道。"
     },
     {
       "date": "2026-05-20",
       "title": "恒通冷链新增昆明-大理冷链专线",
-      "desc": "为满足滇西地区冷链物流需求，公司开通昆明至大理专线。"
+      "desc": "为满足滇西地区冷链物流需求，公司全新开通昆明至大理冷链运输专线，覆盖滇西重点城市。"
     },
     {
       "date": "2026-05-15",
       "title": "恒通冷链通过ISO质量管理体系认证",
-      "desc": "公司正式获得ISO9001质量管理体系认证。"
+      "desc": "公司正式获得ISO9001质量管理体系认证，标志着管理水平和客户服务质量迈上新台阶。"
     }
   ],
   "contactPhone": "0871-68888888",
@@ -84,6 +87,14 @@
   "contactHours": "周一至周日 8:00-20:00",
   "footerCopyright": "© 2026 恒通冷链 All Rights Reserved.",
   "footerIcp": "滇ICP备2026000000号",
+  "footerDesc": "专注冷链物流服务，提供一站式温控解决方案。让每一份托付都安全抵达。",
   "heroBgGh": "https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/images/test_hero.png",
-  "promoVideoGh": "https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/images/test_video.mp4"
+  "heroBgLocal": "",
+  "heroBgImg": "https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/images/test_hero.png",
+  "promoVideoGh": "https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/images/test_video.mp4",
+  "promoVideoLocal": "",
+  "promoVideoData": "https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/images/test_video.mp4",
+  "_gh_newsImg_0": "",
+  "_local_newsImg_0": "",
+  "_img_newsImg_0": ""
 }
