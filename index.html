@@ -339,10 +339,11 @@ function renderData(d){
   if(d.heroBtn1)document.querySelector('.hero-btn-primary').textContent=d.heroBtn1;
   if(d.heroBtn2)document.querySelector('.hero-btn-outline').textContent=d.heroBtn2;
   if(d.heroBtnLink){document.querySelector('.hero-btn-primary').href=d.heroBtnLink}
-  // Hero bg image
-  if(d.heroBgImg){
+  // Hero bg image (support local base64 and GitHub URL)
+  var _heroBg = d.heroBgImg || d.heroBgGh || d.heroBgLocal || '';
+  if(_heroBg){
     var hb=document.getElementById('heroBg');
-    hb.style.background='url('+d.heroBgImg+') center/cover no-repeat';
+    hb.style.background='url('+_heroBg+') center/cover no-repeat';
   }
   // Hero data
   var hd=document.querySelectorAll('.hero-data-item');
@@ -362,7 +363,8 @@ function renderData(d){
   // About
   if(d.aboutTitle)document.getElementById('aboutTitle').textContent=d.aboutTitle;
   if(d.aboutContent){document.getElementById('aboutContent').innerHTML='<p>'+d.aboutContent.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>'}
-  if(d.aboutImgData){var ai=document.getElementById('aboutImg');ai.style.background='url('+d.aboutImgData+') center/cover no-repeat';ai.innerHTML=''}
+  var _aboutImg = d.aboutImgData || d.aboutImgGh || d.aboutImgLocal || '';
+  if(_aboutImg){var ai=document.getElementById('aboutImg');ai.style.background='url('+_aboutImg+') center/cover no-repeat';ai.innerHTML=''}
   // Advantages
   var advs=document.querySelectorAll('.about-adv-item');
   if(d.adv1&&advs[0])advs[0].innerHTML='✅ '+d.adv1;
@@ -386,7 +388,9 @@ function renderData(d){
     var h='';
     d.news.forEach(function(n,i){
       var imgKey='_img_newsImg_'+i;
-      var imgSrc=d[imgKey];
+      var imgGhKey='_gh_newsImg_'+i;
+      var imgLocalKey='_local_newsImg_'+i;
+      var imgSrc=d[imgKey]||d[imgGhKey]||d[imgLocalKey]||'';
       var imgStyle='';
       if(imgSrc){imgStyle='background:url('+imgSrc+') center/cover no-repeat'}else{imgStyle='background:linear-gradient(135deg,#d4e1f7,#b8cef0);display:flex;align-items:center;justify-content:center;font-size:40px'}
       var fallback=imgSrc?'':'📰';
@@ -394,10 +398,11 @@ function renderData(d){
     });
     ng.innerHTML=h;
   }
-  // Video
-  if(d.promoVideoData){
+  // Video (support local base64 and GitHub URL)
+  var _pv = d.promoVideoData || d.promoVideoGh || d.promoVideoLocal || '';
+  if(_pv){
     var pv=document.getElementById('promoVideo');
-    pv.querySelector('source').src=d.promoVideoData;
+    pv.querySelector('source').src=_pv;
     pv.load();
   }
   // Contact
