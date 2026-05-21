@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>恒通冷链 · 管理后台</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:#F5F7FA;color:#1a1a2e;min-height:100vh}
+input,textarea,select{font-family:inherit}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0A3B5C,#1a5276)}
+.login-card{background:#fff;border-radius:20px;padding:48px 40px;width:400px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.login-card h1{font-size:24px;font-weight:700;color:#0A3B5C;margin-bottom:8px;text-align:center}
+.login-card p{font-size:14px;color:#6B7280;text-align:center;margin-bottom:32px}
+.login-form .field{margin-bottom:20px}
+.login-form label{display:block;font-size:13px;font-weight:600;color:#4A4A5A;margin-bottom:6px}
+.login-form input{width:100%;padding:12px 16px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;outline:none;transition:border .3s}
+.login-form input:focus{border-color:#1E88E5;box-shadow:0 0 0 3px rgba(30,136,229,.1)}
+.login-btn{width:100%;padding:14px;background:#1E88E5;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;transition:background .3s}
+.login-btn:hover{background:#1565C0}
+.login-err{background:#FEF2F2;color:#DC2626;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none}
+.admin-layout{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:#0A3B5C;color:#fff;z-index:100;overflow-y:auto}
+.sidebar-header{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700}
+.sidebar-nav{padding:16px 0}
+.sidebar-nav a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;transition:all .2s;border-left:3px solid transparent}
+.sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.08);color:#fff;border-left-color:#1E88E5}
+.main{padding-left:260px;min-height:100vh}
+.main-top{background:#fff;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.06);position:sticky;top:0;z-index:50}
+.main-top h2{font-size:20px;font-weight:700;color:#0A3B5C}
+.main-top .user-info{display:flex;align-items:center;gap:12px;font-size:14px;color:#6B7280}
+.main-top .logout-btn{padding:8px 16px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;color:#6B7280;transition:all .2s}
+.main-top .logout-btn:hover{background:#F5F7FA;color:#DC2626;border-color:#FCA5A5}
+.section-content{padding:32px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.page-card{background:#fff;border-radius:16px;padding:28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.page-card h3{font-size:16px;font-weight:600;color:#0A3B5C;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #F3F4F6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-row.three{grid-template-columns:1fr 1fr 1fr}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:#4A4A5A;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 14px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;outline:none;transition:border .3s;background:#fff}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#1E88E5;box-shadow:0 0 0 3px rgba(30,136,229,.1)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-group .hint{font-size:12px;color:#9CA3AF;margin-top:4px}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:#1E88E5;color:#fff}
+.btn-primary:hover{background:#1565C0}
+.btn-secondary{background:#F3F4F6;color:#4A4A5A}
+.btn-secondary:hover{background:#E5E7EB}
+.btn-danger{background:#EF4444;color:#fff}
+.btn-danger:hover{background:#DC2626}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-group{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-mini{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.stat-mini .num{font-size:28px;font-weight:800;color:#0A3B5C}
+.stat-mini .label{font-size:13px;color:#6B7280;margin-top:4px}
+.news-list table{width:100%;border-collapse:collapse}
+.news-list th,.news-list td{padding:12px 8px;text-align:left;border-bottom:1px solid #F3F4F6;font-size:13px}
+.news-list th{font-weight:600;color:#6B7280;font-size:12px;text-transform:uppercase}
+.news-list td{color:#1a1a2e}
+.news-list .actions{display:flex;gap:6px}
+.preview-toggle{background:#E8EFF8;border:1px dashed #1E88E5;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#1E88E5;cursor:pointer;text-align:center;transition:all .2s}
+.preview-toggle:hover{background:#d4e1f7}
+.toast{position:fixed;top:20px;right:20px;padding:14px 24px;border-radius:10px;color:#fff;font-size:14px;font-weight:500;z-index:9999;opacity:0;transform:translateY(-10px);transition:all .3s}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast-success{background:#10B981}
+.toast-error{background:#EF4444}
+.toast-warn{background:#F59E0B}
+
+/* 图片上传组件 */
+.img-upload{position:relative;border:2px dashed #D1D5DB;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:#FAFBFC;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.img-upload:hover{border-color:#1E88E5;background:#F0F7FF}
+.img-upload.has-img{border-style:solid;border-color:#10B981;padding:8px}
+.img-upload .preview{max-width:100%;max-height:220px;border-radius:8px;display:block;margin:0 auto;object-fit:contain}
+.img-upload .placeholder{color:#9CA3AF;font-size:13px;margin-top:8px}
+.img-upload .upload-icon{font-size:32px;color:#D1D5DB;margin-bottom:8px}
+.img-upload.has-img .upload-icon,.img-upload.has-img .placeholder{display:none}
+.img-upload input[type=file]{display:none}
+.img-actions{display:flex;gap:6px;margin-top:8px;justify-content:center}
+.img-actions .btn-remove{padding:4px 12px;border:1px solid #FCA5A5;background:#fff;color:#EF4444;border-radius:6px;cursor:pointer;font-size:12px;transition:all .2s}
+.img-actions .btn-remove:hover{background:#FEF2F2}
+
+@media(max-width:768px){
+.sidebar{width:60px}
+.sidebar-header span:not(.sidebar-header > span:first-child){display:none}
+.sidebar-nav a span:last-child{display:none}
+.main{padding-left:60px}
+.form-row{grid-template-columns:1fr}
+.form-row.three{grid-template-columns:1fr}
+.stat-cards{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<div class="login" id="loginPanel">
+<div class="login-card">
+<h1>🔐 管理后台</h1>
+<p>恒通冷链 · 内容管理系统</p>
+<div class="login-err" id="loginErr">密码错误，请重试</div>
+<form class="login-form" onsubmit="return handleLogin(event)">
+<div class="field"><label>管理员密码</label><input type="password" id="pwdInput" placeholder="请输入管理密码"></div>
+<button type="submit" class="login-btn">登录后台</button>
+</form>
+</div></div>
+
+<div class="admin-layout" id="adminLayout">
+<aside class="sidebar">
+<div class="sidebar-header"><span style="font-size:22px">❄️</span><span>恒通冷链</span></div>
+<nav class="sidebar-nav">
+<a href="#" class="active" data-tab="dashboard"><span>📊</span><span>控制台</span></a>
+<a href="#" data-tab="hero"><span>🏠</span><span>Hero区域</span></a>
+<a href="#" data-tab="about"><span>📖</span><span>关于我们</span></a>
+<a href="#" data-tab="stats"><span>📈</span><span>统计数据</span></a>
+<a href="#" data-tab="services"><span>🚛</span><span>核心业务</span></a>
+<a href="#" data-tab="news"><span>📰</span><span>新闻动态</span></a>
+<a href="#" data-tab="media"><span>🎬</span><span>图片视频</span></a>
+<a href="#" data-tab="contact"><span>📞</span><span>联系方式</span></a>
+<a href="#" data-tab="footer"><span>🔽</span><span>页脚设置</span></a>
+<a href="#" data-tab="publish"><span>🚀</span><span>发布管理</span></a>
+</nav></aside>
+
+<div class="main">
+<div class="main-top"><h2 id="pageTitle">控制台</h2>
+<div class="user-info"><span>管理员</span><button class="logout-btn" onclick="handleLogout()">退出登录</button></div></div>
+
+<div class="section-content">
+
+<div class="tab-content active" id="tab-dashboard">
+<div class="page-card"><h3>概览</h3><div class="stat-cards" id="dashStats"></div>
+<p style="font-size:14px;color:#6B7280;line-height:1.8">欢迎使用恒通冷链内容管理系统。<br>
+您可以在此编辑首页各板块内容、管理新闻动态、上传图片视频、更新联系方式。<br>
+编辑完成后点击「发布管理」→「保存到网站」即可更新线上页面。</p></div></div>
+
+<div class="tab-content" id="tab-hero">
+<div class="page-card"><h3>Hero 区域设置</h3>
+<div class="form-group"><label>主标题</label><input type="text" id="eHeroTitle" value="全程温控 · 安心直达"></div>
+<div class="form-group"><label>描述文字</label><textarea id="eHeroDesc" rows="2">恒通冷链，专注冷链物流服务，从仓储到配送全程温控可追溯，让每一份托付都安全抵达</textarea></div>
+<div class="form-row three">
+<div class="form-group"><label>左按钮文字</label><input type="text" id="eHeroBtn1" value="了解服务"></div>
+<div class="form-group"><label>右按钮文字</label><input type="text" id="eHeroBtn2" value="联系我们"></div>
+<div class="form-group"><label>按钮链接</label><input type="text" id="eHeroBtnLink" value="#services"></div></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="saveHero()">保存 Hero</button></div></div>
+<div class="page-card"><h3>Hero 数据亮点</h3>
+<div class="form-row">
+<div class="form-group"><label>数据1 (名称)</label><input type="text" id="eD1Label" value="合作企业"><div style="margin-top:8px"><label>数值</label><input type="text" id="eD1Val" value="100+"></div></div>
+<div class="form-group"><label>数据2 (名称)</label><input type="text" id="eD2Label" value="冷链车辆"><div style="margin-top:8px"><label>数值</label><input type="text" id="eD2Val" value="50+"></div></div></div>
+<div class="form-row">
+<div class="form-group"><label>数据3 (名称)</label><input type="text" id="eD3Label" value="服务城市"><div style="margin-top:8px"><label>数值</label><input type="text" id="eD3Val" value="30+"></div></div>
+<div class="form-group"><label>数据4 (名称)</label><input type="text" id="eD4Label" value="年运输量(吨)"><div style="margin-top:8px"><label>数值</label><input type="text" id="eD4Val" value="5万+"></div></div></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="saveHeroData()">保存数据</button></div></div></div>
+
+<div class="tab-content" id="tab-stats">
+<div class="page-card"><h3>统计数据 (动画展示)</h3>
+<div class="form-row">
+<div class="form-group"><label>仓储面积</label><input type="number" id="eStat1" value="20000"><div class="hint">单位：㎡</div></div>
+<div class="form-group"><label>冷链车辆</label><input type="number" id="eStat2" value="50"><div class="hint">单位：辆</div></div></div>
+<div class="form-row">
+<div class="form-group"><label>服务城市</label><input type="number" id="eStat3" value="30"><div class="hint">单位：个</div></div>
+<div class="form-group"><label>年运输量</label><input type="number" id="eStat4" value="50000"><div class="hint">单位：吨/年</div></div></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="saveStats()">保存</button></div></div></div>
+
+<div class="tab-content" id="tab-about">
+<div class="page-card"><h3>关于我们</h3>
+<div class="form-group"><label>板块标题</label><input type="text" id="eAboutTitle" value="关于恒通冷链"></div>
+<div class="form-group"><label>简介内容</label><textarea id="eAboutContent" rows="5">恒通冷链物流有限公司，专注于冷链物流服务领域，致力于为客户提供安全、高效、专业的冷链物流解决方案。
+
+公司拥有现代化冷链仓储设施和专业冷链运输车队，配备先进的温控管理系统，实现全流程温度实时监控与追溯。
+
+我们始终坚持以客户需求为导向，以品质服务为核心，为生鲜食品、医药制品等温度敏感型产品提供一站式冷链物流服务。</textarea></div>
+<div class="form-row two">
+<div class="form-group"><label>优势1</label><input type="text" id="eAdv1" value="全链条温控"></div>
+<div class="form-group"><label>优势2</label><input type="text" id="eAdv2" value="实时监控系统"></div></div>
+<div class="form-row two">
+<div class="form-group"><label>优势3</label><input type="text" id="eAdv3" value="专业运营团队"></div>
+<div class="form-group"><label>优势4</label><input type="text" id="eAdv4" value="行业资质认证"></div></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="saveAbout()">保存</button></div></div></div>
+
+<div class="tab-content" id="tab-services">
+<div class="page-card"><h3>核心业务 (4项)</h3><div id="servicesEditor"></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="saveServices()">保存所有业务</button></div></div></div>
+
+<div class="tab-content" id="tab-news">
+<div class="page-card"><h3>新闻动态管理</h3>
+<div class="news-list" id="newsEditor"></div>
+<div class="btn-group"><button class="btn btn-secondary" onclick="addNews()">+ 添加新闻</button><button class="btn btn-primary" onclick="saveNews()">保存更改</button></div></div></div>
+
+<div class="tab-content" id="tab-media">
+<div class="page-card"><h3>图片管理 <span style="font-size:12px;font-weight:400;color:#6B7280">支持 JPG/PNG/GIF/WebP，上传后自动缩放到合适尺寸</span></h3>
+
+<div style="margin-bottom:24px">
+<h4 style="font-size:14px;font-weight:600;color:#0A3B5C;margin-bottom:12px">📷 Hero 背景图</h4>
+<div id="upload-heroBg" class="img-upload" onclick="pickFile('heroBg')">
+<div class="upload-icon">🖼️</div>
+<div class="placeholder">点击上传背景大图（建议 1920×1080+）</div>
+</div>
+<input type="file" id="file-heroBg" accept="image/*" onchange="handleUpload('heroBg',event)" style="display:none">
+<div class="btn-group" style="justify-content:center"><button class="btn btn-sm btn-danger" onclick="removeImage('heroBg')">🗑️ 移除图片</button></div>
+</div>
+
+<div style="margin-bottom:24px">
+<h4 style="font-size:14px;font-weight:600;color:#0A3B5C;margin-bottom:12px">📷 关于我们 - 配图</h4>
+<div id="upload-aboutImg" class="img-upload" onclick="pickFile('aboutImg')">
+<div class="upload-icon">🖼️</div>
+<div class="placeholder">点击上传关于公司配图（建议 800×600+）</div>
+</div>
+<input type="file" id="file-aboutImg" accept="image/*" onchange="handleUpload('aboutImg',event)" style="display:none">
+<div class="btn-group" style="justify-content:center"><button class="btn btn-sm btn-danger" onclick="removeImage('aboutImg')">🗑️ 移除图片</button></div>
+</div>
+
+<h4 style="font-size:14px;font-weight:600;color:#0A3B5C;margin-bottom:12px">📰 新闻缩略图</h4>
+<div id="newsImageList"></div>
+
+</div>
+
+<div class="page-card"><h3>企业宣传视频 <span style="font-size:12px;font-weight:400;color:#6B7280">支持 MP4/WebM</span></h3>
+<div style="margin-bottom:12px">
+<h4 style="font-size:14px;font-weight:600;color:#0A3B5C;margin-bottom:8px">📹 上传视频文件</h4>
+<div id="upload-promoVideo" class="img-upload" onclick="pickFile('promoVideo')">
+<div class="upload-icon">🎬</div>
+<div class="placeholder">点击上传宣传视频（建议 100MB 以内）</div>
+</div>
+<input type="file" id="file-promoVideo" accept="video/mp4,video/webm" onchange="handleUpload('promoVideo',event)" style="display:none">
+<div class="btn-group" style="justify-content:center"><button class="btn btn-sm btn-danger" onclick="removeImage('promoVideo')">🗑️ 移除视频</button></div>
+<p class="hint" style="text-align:center">视频文件可能较大，上传后请耐心等待处理</p>
+</div></div></div>
+
+<div class="tab-content" id="tab-contact">
+<div class="page-card"><h3>联系方式</h3>
+<div class="form-row">
+<div class="form-group"><label>联系电话</label><input type="text" id="eContactPhone" value="0871-XXXXXXX"></div>
+<div class="form-group"><label>电子邮箱</label><input type="text" id="eContactEmail" value="contact@hengtong-coldchain.com"></div></div>
+<div class="form-row">
+<div class="form-group"><label>公司地址</label><input type="text" id="eContactAddr" value="云南省昆明市XXXXXXXX路XX号"></div>
+<div class="form-group"><label>服务时间</label><input type="text" id="eContactHours" value="周一至周日 8:00-20:00"></div></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="saveContact()">保存</button></div></div></div>
+
+<div class="tab-content" id="tab-footer">
+<div class="page-card"><h3>页脚设置</h3>
+<div class="form-group"><label>版权信息</label><input type="text" id="eFooterCopyright" value="© 2026 恒通冷链 All Rights Reserved."></div>
+<div class="form-group"><label>备案号</label><input type="text" id="eFooterIcp" value="滇ICP备XXXXXXXX号"></div>
+<div class="form-group"><label>公司简介</label><textarea id="eFooterDesc" rows="2">专注冷链物流服务，提供一站式温控解决方案。让每一份托付都安全抵达。</textarea></div>
+<div class="btn-group"><button class="btn btn-primary" onclick="saveFooter()">保存</button></div></div></div>
+
+<div class="tab-content" id="tab-publish">
+<div class="page-card"><h3>发布管理</h3>
+<p style="font-size:14px;color:#6B7280;margin-bottom:16px">点击下方按钮，将所有修改（含图片）同步到首页。</p>
+<div class="preview-toggle" onclick="window.open(window.location.href.replace('admin.html','index.html'),'_blank')">🔍 预览网站</div>
+<div class="btn-group" style="justify-content:flex-start">
+<button class="btn btn-primary" onclick="publishToSite()">🚀 保存到网站</button></div>
+<p style="font-size:12px;color:#9CA3AF;margin-top:12px">图片上传到 GitHub 仓库的 images/ 目录，文字数据保存到 data.json。首页自动从 GitHub 读取渲染。</p></div>
+<div class="page-card"><h3>备份 / 还原</h3>
+<div class="btn-group" style="justify-content:flex-start">
+<button class="btn btn-secondary" onclick="backupData()">💾 导出备份</button>
+<button class="btn btn-secondary" onclick="document.getElementById('restoreInput').click()">📂 导入备份</button></div>
+<input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(event)">
+<p style="font-size:12px;color:#9CA3AF;margin-top:8px">备份包含所有文字和图片数据，导出为 JSON 文件。</p></div></div>
+
+</div></div></div>
+
+<script>
+var APP_PWD='ht2026';
+var STORAGE_KEY='ht_data';
+var GH_OWNER='zijun-arch';
+var GH_REPO='hengtong-website';
+var GH_API='http://VM-0-7-ubuntu:3456/github';
+var GH_BRANCH='main';
+var defaultServices=[
+{icon:'🚛',title:'冷链运输',desc:'覆盖全国的冷链干线运输网络，多温区运输能力，GPS实时定位追踪，确保货物全程温控。',tags:['干线运输','支线配送','多温区']},
+{icon:'🏭',title:'冷库仓储',desc:'现代化冷链仓储设施，提供冷冻、冷藏、恒温等多温区仓储服务，专业库存管理系统。',tags:['冷冻仓储','冷藏仓储','恒温存储']},
+{icon:'🚚',title:'城市配送',desc:'覆盖各主要城市的冷链配送网络，B端门店直达配送，准时高效，满足各类配送需求。',tags:['门店配送','电商配送','定时达']},
+{icon:'📦',title:'增值服务',desc:'提供分拣、包装、贴标、追溯等一站式增值服务，满足客户多元化需求，提升供应链效率。',tags:['分拣包装','溯源服务','定制方案']}];
+var defaultNews=[
+{date:'2026-05-15',title:'恒通冷链成功通过ISO质量管理体系认证',desc:'公司正式获得ISO9001质量管理体系认证，标志着管理水平和服务质量迈上新台阶。'},
+{date:'2026-04-28',title:'冷链物流行业发展趋势分享',desc:'伴随着新零售和生鲜电商的快速发展，冷链物流行业迎来新的发展机遇。'},
+{date:'2026-03-10',title:'恒通冷链新增冷链运输车辆20台',desc:'为满足业务增长需求，公司新增20台冷藏运输车辆，进一步提升配送能力。'}];
+var data={};
+var uploadCallbacks={};
+
+function loadData(){try{data=JSON.parse(localStorage.getItem(STORAGE_KEY))||{}}catch(e){data={}};if(!data.services)data.services=JSON.parse(JSON.stringify(defaultServices));if(!data.news)data.news=JSON.parse(JSON.stringify(defaultNews))}
+function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
+function toast(m,t){var e=document.getElementById('toast');e.className='toast toast-'+t+' show';e.textContent=m;setTimeout(function(){e.classList.remove('show')},3000)}
+function handleLogin(e){e.preventDefault();if(document.getElementById('pwdInput').value===APP_PWD){document.getElementById('loginPanel').style.display='none';document.getElementById('adminLayout').style.display='block';document.getElementById('pwdInput').value='';initAdmin()}else{document.getElementById('loginErr').style.display='block'}return false}
+function handleLogout(){document.getElementById('loginPanel').style.display='flex';document.getElementById('adminLayout').style.display='none'}
+
+document.querySelectorAll('.sidebar-nav a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();document.querySelectorAll('.sidebar-nav a').forEach(function(x){x.classList.remove('active')});this.classList.add('active');document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});var tb=document.getElementById('tab-'+this.dataset.tab);if(tb)tb.classList.add('active');document.getElementById('pageTitle').textContent=this.textContent.trim()})});
+
+function initAdmin(){loadData();loadDashboard();loadServicesEditor();loadNewsEditor();loadNewsImages();fillFields();renderAllUploads()}
+
+function loadDashboard(){var h='',c=0;data.news.forEach(function(){c++});[{num:data.services.length,label:'服务项目'},{num:c,label:'新闻条数'},{num:Object.keys(data).filter(function(k){return k.indexOf('_img_')===0||k==='heroBgImg'||k==='aboutImgData'||k==='promoVideoData'}).length,label:'已上传文件'},{num:1,label:'在线版本'}].forEach(function(i){h+='<div class="stat-mini"><div class="num">'+i.num+'</div><div class="label">'+i.label+'</div></div>'});document.getElementById('dashStats').innerHTML=h}
+
+function fillFields(){try{
+if(data.heroTitle)document.getElementById('eHeroTitle').value=data.heroTitle;
+if(data.heroDesc)document.getElementById('eHeroDesc').value=data.heroDesc;
+if(data.heroBtn1)document.getElementById('eHeroBtn1').value=data.heroBtn1;
+if(data.heroBtn2)document.getElementById('eHeroBtn2').value=data.heroBtn2;
+if(data.aboutTitle)document.getElementById('eAboutTitle').value=data.aboutTitle;
+if(data.aboutContent)document.getElementById('eAboutContent').value=data.aboutContent;
+if(data.adv1)document.getElementById('eAdv1').value=data.adv1;
+if(data.adv2)document.getElementById('eAdv2').value=data.adv2;
+if(data.adv3)document.getElementById('eAdv3').value=data.adv3;
+if(data.adv4)document.getElementById('eAdv4').value=data.adv4;
+if(data.stat1)document.getElementById('eStat1').value=data.stat1;
+if(data.stat2)document.getElementById('eStat2').value=data.stat2;
+if(data.stat3)document.getElementById('eStat3').value=data.stat3;
+if(data.stat4)document.getElementById('eStat4').value=data.stat4;
+if(data.contactPhone)document.getElementById('eContactPhone').value=data.contactPhone;
+if(data.contactEmail)document.getElementById('eContactEmail').value=data.contactEmail;
+if(data.contactAddr)document.getElementById('eContactAddr').value=data.contactAddr;
+if(data.contactHours)document.getElementById('eContactHours').value=data.contactHours;
+if(data.footerCopyright)document.getElementById('eFooterCopyright').value=data.footerCopyright;
+if(data.footerIcp)document.getElementById('eFooterIcp').value=data.footerIcp;
+if(data.footerDesc)document.getElementById('eFooterDesc').value=data.footerDesc;
+if(data.d1Label)document.getElementById('eD1Label').value=data.d1Label;
+if(data.d1Val)document.getElementById('eD1Val').value=data.d1Val;
+if(data.d2Label)document.getElementById('eD2Label').value=data.d2Label;
+if(data.d2Val)document.getElementById('eD2Val').value=data.d2Val;
+if(data.d3Label)document.getElementById('eD3Label').value=data.d3Label;
+if(data.d3Val)document.getElementById('eD3Val').value=data.d3Val;
+if(data.d4Label)document.getElementById('eD4Label').value=data.d4Label;
+if(data.d4Val)document.getElementById('eD4Val').value=data.d4Val;
+}catch(e){}}
+
+function pickFile(key){document.getElementById('file-'+key).click();uploadCallbacks[key]=true}
+function handleUpload(key,event){
+var file=event.target.files[0];if(!file)return;
+if(file.size>20*1024*1024&&key!=='promoVideo'){toast('图片超过 20MB，请压缩后上传','error');return}
+if(file.size>200*1024*1024&&key==='promoVideo'){toast('视频超过 200MB，请压缩后上传','error');return}
+var reader=new FileReader();
+reader.onload=function(e){
+var result=e.target.result;
+var ext=file.name.split('.').pop().toLowerCase();
+if(key==='promoVideo')ext='mp4';
+var fn=key+'_'+Date.now()+'.'+ext;
+var ghPath='images/'+fn;
+if(key==='heroBg'){data.heroBgImg=result;renderSingleUpload('heroBg',result)}
+else if(key==='aboutImg'){data.aboutImgData=result;renderSingleUpload('aboutImg',result)}
+else if(key==='promoVideo'){data.promoVideoData=result;renderSingleUpload('promoVideo',result)}
+else if(key.indexOf('newsImg_')===0){data['_img_'+key]=result;renderSingleUpload(key,result)}
+saveData();
+uploadToGithub(ghPath,result,function(url){
+if(url){
+if(key==='heroBg'){data.heroBgGh=url;data.heroBgLocal=result}
+else if(key==='aboutImg'){data.aboutImgGh=url;data.aboutImgLocal=result}
+else if(key==='promoVideo'){data.promoVideoGh=url;data.promoVideoLocal=result}
+else if(key.indexOf('newsImg_')===0){data['_gh_'+key]=url;data['_local_'+key]=result}
+saveData();toast('上传成功！已永久保存到GitHub','success')
+}else{toast('GitHub上传失败，数据仅保存在本地','warn')}
+});
+};
+reader.readAsDataURL(file);
+}
+function uploadToGithub(path,base64Data,cb){
+var x=new XMLHttpRequest();x.open('POST',GH_API+'/upload',true);
+x.setRequestHeader('Content-Type','application/json');
+x.onreadystatechange=function(){if(x.readyState===4){
+if(x.status===200){var r=JSON.parse(x.responseText);cb(r.url)}
+else{cb(null);toast('GitHub上传失败: '+x.status,'error')}
+}};
+x.send(JSON.stringify({path:path,content:base64Data,owner:GH_OWNER,repo:GH_REPO,branch:GH_BRANCH}));
+}
+
+function renderSingleUpload(key,src){
+var container=document.getElementById('upload-'+key);
+if(!container)return;
+container.classList.add('has-img');
+if(key==='promoVideo'){
+container.innerHTML='<video controls style="max-width:100%;max-height:220px;border-radius:8px"><source src="'+src+'" type="video/mp4"></video>';
+}else{
+container.innerHTML='<img class="preview" src="'+src+'" alt="已上传图片">';
+}
+}
+
+function removeImage(key){
+if(!confirm('确认移除？'))return;
+if(key==='heroBg'){delete data.heroBgImg;delete data.heroBgLocal;delete data.heroBgGh;resetUploadUI('heroBg')}
+else if(key==='aboutImg'){delete data.aboutImgData;delete data.aboutImgLocal;delete data.aboutImgGh;resetUploadUI('aboutImg')}
+else if(key==='promoVideo'){delete data.promoVideoData;delete data.promoVideoLocal;delete data.promoVideoGh;resetUploadUI('promoVideo')}
+else if(key.indexOf('newsImg_')===0){delete data['_img_'+key];delete data['_local_'+key];delete data['_gh_'+key];renderNewsImages();saveData()}
+saveData();toast('已移除','success')
+}
+
+function resetUploadUI(key){
+var container=document.getElementById('upload-'+key);
+if(!container)return;
+container.classList.remove('has-img');
+container.innerHTML='<div class="upload-icon">'+(key==='promoVideo'?'🎬':'🖼️')+'</div><div class="placeholder">点击上传'+(key==='promoVideo'?'视频':'图片')+'</div>';
+}
+
+function aboutImgData);
+if(data.promoVideoData)renderSingleUpload('promoVideo',data.promoVideoData);
+}
+
+function loadNewsImages(){
+var h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">';
+data.news.forEach(function(n,i){
+h+='<div><p style="font-size:12px;color:#6B7280;margin-bottom:8px">📰 新闻'+(i+1)+': '+n.title.substring(0,20)+'...</p>';
+h+='<div id="upload-newsImg_'+i+'" class="img-upload" onclick="pickFile(\'newsImg_'+i+'\')" style="min-height:80px">';
+h+='<div class="upload-icon">🖼️</div><div class="placeholder">点击上传</div></div>';
+h+='<input type="file" id="file-newsImg_'+i+'" accept="image/*" onchange="handleUpload(\'newsImg_'+i+'\',event)" style="display:none">';
+h+='<div class="btn-group" style="justify-content:center;margin-top:4px"><button class="btn btn-sm btn-danger" onclick="removeImage(\'newsImg_'+i+'\')">🗑️</button></div></div>';
+});
+h+='</div>';
+document.getElementById('newsImageList').innerHTML=h;
+data.news.forEach(function(n,i){
+var key='_img_newsImg_'+i;
+if(data[key])renderSingleUpload('newsImg_'+i,data[key]);
+});
+}
+
+function saveHero(){data.heroTitle=document.getElementById('eHeroTitle').value;data.heroDesc=document.getElementById('eHeroDesc').value;data.heroBtn1=document.getElementById('eHeroBtn1').value;data.heroBtn2=document.getElementById('eHeroBtn2').value;saveData();toast('Hero 已保存','success')}
+function saveHeroData(){data.d1Label=document.getElementById('eD1Label').value;data.d1Val=document.getElementById('eD1Val').value;data.d2Label=document.getElementById('eD2Label').value;data.d2Val=document.getElementById('eD2Val').value;data.d3Label=document.getElementById('eD3Label').value;data.d3Val=document.getElementById('eD3Val').value;data.d4Label=document.getElementById('eD4Label').value;data.d4Val=document.getElementById('eD4Val').value;data.heroBtnLink=document.getElementById('eHeroBtnLink').value;saveData();toast('Hero 数据已保存','success')}
+function saveStats(){data.stat1=parseInt(document.getElementById('eStat1').value)||0;data.stat2=parseInt(document.getElementById('eStat2').value)||0;data.stat3=parseInt(document.getElementById('eStat3').value)||0;data.stat4=parseInt(document.getElementById('eStat4').value)||0;saveData();toast('统计数据已保存','success')}
+function saveAbout(){data.aboutTitle=document.getElementById('eAboutTitle').value;data.aboutContent=document.getElementById('eAboutContent').value;data.adv1=document.getElementById('eAdv1').value;data.adv2=document.getElementById('eAdv2').value;data.adv3=document.getElementById('eAdv3').value;data.adv4=document.getElementById('eAdv4').value;saveData();toast('关于我们已保存','success')}
+function loadServicesEditor(){var h='';data.services.forEach(function(s,i){h+='<div style="border:1px solid #E5E7EB;border-radius:12px;padding:20px;margin-bottom:16px"><h4 style="font-size:14px;font-weight:600;color:#0A3B5C;margin-bottom:12px">业务'+(i+1)+'</h4><div class="form-row"><div class="form-group"><label>图标</label><input type="text" class="svc-icon" value="'+s.icon+'" data-i="'+i+'"></div><div class="form-group"><label>标题</label><input type="text" class="svc-title" value="'+s.title.replace(/"/g,'&quot;')+'" data-i="'+i+'"></div></div><div class="form-group"><label>描述</label><textarea class="svc-desc" data-i="'+i+'" rows="2">'+s.desc.replace(/"/g,'&quot;')+'</textarea></div><div class="form-group"><label>标签 (逗号隔开)</label><input type="text" class="svc-tags" value="'+s.tags.join(',')+'" data-i="'+i+'"></div></div>'});document.getElementById('servicesEditor').innerHTML=h}
+function saveServices(){document.querySelectorAll('.svc-icon').forEach(function(el){var i=parseInt(el.dataset.i);data.services[i].icon=el.value});document.querySelectorAll('.svc-title').forEach(function(el){var i=parseInt(el.dataset.i);data.services[i].title=el.value});document.querySelectorAll('.svc-desc').forEach(function(el){var i=parseInt(el.dataset.i);data.services[i].desc=el.value});document.querySelectorAll('.svc-tags').forEach(function(el){var i=parseInt(el.dataset.i);data.services[i].tags=el.value.split(',').map(function(t){return t.trim()}).filter(function(t){return t})});saveData();toast('核心业务已保存','success')}
+function loadNewsEditor(){renderNewsTable()}
+function renderNewsTable(){var h='<table><thead><tr><th>日期</th><th>标题</th><th>操作</th></tr></thead><tbody>';data.news.forEach(function(n,i){h+='<tr><td><input type="text" class="news-date" value="'+n.date+'" data-i="'+i+'" style="width:90px;padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px"></td><td><input type="text" class="news-title" value="'+n.title.replace(/"/g,'&quot;')+'" data-i="'+i+'" style="width:100%;padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px"></td><td><div class="actions"><button class="btn btn-sm btn-secondary" onclick="editNewsDesc('+i+')">📝</button><button class="btn btn-sm btn-danger" onclick="deleteNews('+i+')">🗑️</button></div></td></tr>'});h+='</tbody></table>';document.getElementById('newsEditor').innerHTML=h}
+function editNewsDesc(i){var d=prompt('编辑描述:',data.news[i].desc);if(d!==null){data.news[i].desc=d;saveData();renderNewsTable();toast('描述已更新','success')}}
+function deleteNews(i){if(confirm('确认删除这条新闻？')){data.news.splice(i,1);saveData();renderNewsTable();loadNewsImages();toast('已删除','success')}}
+function addNews(){data.news.push({date:'2026-01-01',title:'新新闻',desc:'点击 📝 编辑描述'});saveData();renderNewsTable();loadNewsImages();toast('已添加','success')}
+function saveNews(){document.querySelectorAll('.news-date').forEach(function(el){var i=parseInt(el.dataset.i);data.news[i].date=el.value});document.querySelectorAll('.news-title').forEach(function(el){var i=parseInt(el.dataset.i);data.news[i].title=el.value});saveData();toast('新闻已保存','success')}
+function saveContact(){data.contactPhone=document.getElementById('eContactPhone').value;data.contactEmail=document.getElementById('eContactEmail').value;data.contactAddr=document.getElementById('eContactAddr').value;data.contactHours=document.getElementById('eContactHours').value;saveData();toast('联系方式已保存','success')}
+function saveFooter(){data.footerCopyright=document.getElementById('eFooterCopyright').value;data.footerIcp=document.getElementById('eFooterIcp').value;data.footerDesc=document.getElementById('eFooterDesc').value;saveData();toast('页脚已保存','success')}
+function publishToSite(){
+var pd={};
+['services','news','heroTitle','heroDesc','heroBtn1','heroBtn2','heroBtnLink',
+'d1Label','d1Val','d2Label','d2Val','d3Label','d3Val','d4Label','d4Val',
+'stat1','stat2','stat3','stat4','aboutTitle','aboutContent',
+'adv1','adv2','adv3','adv4','contactPhone','contactEmail','contactAddr','contactHours',
+'footerCopyright','footerIcp','footerDesc',
+'heroBgGh','heroBgLocal','aboutImgGh','aboutImgLocal','promoVideoGh','promoVideoLocal'
+].forEach(function(k){if(data[k]!==undefined)pd[k]=data[k]});
+if(data.news){data.news.forEach(function(n,i){
+var gk='_gh_newsImg_'+i;var lk='_local_newsImg_'+i;
+if(data[gk])pd[gk]=data[gk];if(data[lk])pd[lk]=data[lk];
+})}
+var js=JSON.stringify(pd,null,2);
+var api=GH_API+'/publish';
+var x=new XMLHttpRequest();x.open('POST',api,true);
+x.setRequestHeader('Content-Type','application/json');
+x.onreadystatechange=function(){if(x.readyState===4){
+if(x.status===200){toast('✅ 发布成功！所有数据已永久保存到GitHub','success')}
+else{toast('发布失败: '+x.status+' '+x.responseText,'error')}
+}};x.send(JSON.stringify({content:js,owner:GH_OWNER,repo:GH_REPO,branch:GH_BRANCH}));
+}
+function backupData(){var b=document.createElement('a');b.href='data:text/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(data,null,2));b.download='ht-backup-'+new Date().toISOString().slice(0,10)+'.json';b.click();toast('备份已导出','success')}
+function restoreData(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);data=d;saveData();initAdmin();toast('数据已还原','success')}catch(ex){toast('文件格式错误','error')}};r.readAsText(f)}
+</script>
+</body>
+</html>

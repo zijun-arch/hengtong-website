@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>恒通冷链 | 全程温控 · 安心直达</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;color:#1a1a2e;background:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+ul{list-style:none}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+section{padding:100px 0}
+.section-tag{display:inline-block;font-size:13px;font-weight:600;letter-spacing:3px;color:#1E88E5;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-size:36px;font-weight:700;color:#0A3B5C;margin-bottom:16px}
+.section-subtitle{font-size:16px;color:#6B7280;max-width:600px;margin-bottom:48px}
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 0;transition:all .3s ease;background:transparent}
+.navbar.scrolled{background:rgba(255,255,255,.95);padding:12px 0;box-shadow:0 2px 20px rgba(0,0,0,.08);backdrop-filter:blur(10px)}
+.navbar .container{display:flex;align-items:center;justify-content:space-between}
+.navbar .logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;color:#fff;transition:color .3s}
+.navbar.scrolled .logo{color:#0A3B5C}
+.navbar .logo-icon{font-size:28px}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:15px;font-weight:500;color:rgba(255,255,255,.85);transition:color .3s;position:relative}
+.navbar.scrolled .nav-links a{color:#4A4A5A}
+.nav-links a:hover,.navbar.scrolled .nav-links a:hover{color:#1E88E5}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:#1E88E5;transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-cta{display:inline-block;padding:10px 24px;background:#1E88E5;color:#fff!important;border-radius:6px;font-weight:600;transition:background .3s}
+.nav-cta:hover{background:#1565C0}
+.nav-cta::after{display:none!important}
+.menu-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px}
+.menu-toggle span{display:block;width:24px;height:2px;background:#fff;border-radius:2px;transition:.3s}
+.navbar.scrolled .menu-toggle span{background:#0A3B5C}
+.hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0A3B5C}
+.hero-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(10,59,92,.85),rgba(10,59,92,.4))}
+.hero-content{position:relative;z-index:2;text-align:center;color:#fff;max-width:800px;padding:0 20px}
+.hero-data{display:flex;justify-content:center;gap:40px;margin-bottom:32px;flex-wrap:wrap}
+.hero-data-item{text-align:center}
+.hero-data-num{font-size:42px;font-weight:800;line-height:1.2}
+.hero-data-label{font-size:13px;opacity:.8;letter-spacing:1px}
+.hero h1{font-size:52px;font-weight:800;line-height:1.2;margin-bottom:16px;letter-spacing:-1px}
+.hero p{font-size:18px;opacity:.85;margin-bottom:36px;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.hero-btn{display:inline-block;padding:14px 36px;border-radius:8px;font-size:16px;font-weight:600;transition:all .3s;cursor:pointer;border:none}
+.hero-btn-primary{background:#1E88E5;color:#fff}
+.hero-btn-primary:hover{background:#1565C0;transform:translateY(-2px);box-shadow:0 8px 25px rgba(30,136,229,.4)}
+.hero-btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6)}
+.hero-btn-outline:hover{border-color:#fff;background:rgba(255,255,255,.1);transform:translateY(-2px)}
+.scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;animation:bounce 2s infinite}
+.scroll-indicator span{display:block;width:24px;height:24px;border-right:2px solid rgba(255,255,255,.6);border-bottom:2px solid rgba(255,255,255,.6);transform:rotate(45deg)}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+.stats{background:#F5F7FA;padding:80px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.stat-card{text-align:center;padding:30px 20px;background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.04);transition:all .3s}
+.stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,.08)}
+.stat-card .num{font-size:44px;font-weight:800;color:#0A3B5C;line-height:1.2}
+.stat-card .unit{font-size:18px;font-weight:600;color:#1E88E5}
+.stat-card .label{font-size:14px;color:#6B7280;margin-top:8px}
+.about .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-image{border-radius:16px;overflow:hidden;background:#E8EFF8;min-height:400px;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
+.about h2{font-size:32px;margin-bottom:20px}
+.about p{color:#4A4A5A;margin-bottom:16px;font-size:16px;line-height:1.8}
+.about-advantages{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.about-adv-item{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:#0A3B5C}
+.services{background:#F5F7FA}
+.services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.service-card{background:#fff;border-radius:16px;padding:36px 28px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+.service-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:0;background:#1E88E5;transition:height .4s}
+.service-card:hover::before{height:100%}
+.service-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,.08)}
+.service-icon{width:56px;height:56px;background:#E8EFF8;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;transition:all .3s}
+.service-card:hover .service-icon{background:#1E88E5;color:#fff}
+.service-card h4{font-size:20px;font-weight:700;color:#0A3B5C;margin-bottom:8px}
+.service-card p{font-size:14px;color:#6B7280;line-height:1.7}
+.service-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.service-tag{padding:4px 14px;background:#E8EFF8;border-radius:20px;font-size:12px;color:#1E88E5;font-weight:500}
+.process{background:#fff}
+.process-steps{display:flex;justify-content:space-between;position:relative;padding-top:20px}
+@media(max-width:768px){.process-steps{flex-wrap:wrap;gap:24px;justify-content:center}}
+.process-step{text-align:center;position:relative;padding:0 10px;flex:1;max-width:160px}
+.process-step .step-num{width:48px;height:48px;background:#0A3B5C;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin:0 auto 12px;position:relative;z-index:2}
+.process-step .step-icon{font-size:24px;margin-bottom:8px}
+.process-step h4{font-size:14px;font-weight:600;color:#0A3B5C;margin-bottom:4px}
+.process-step p{font-size:12px;color:#6B7280}
+.process-line{position:absolute;top:44px;left:0;right:0;height:2px;background:linear-gradient(90deg,#E8EFF8,#1E88E5,#E8EFF8);z-index:1}
+.partners{background:#F5F7FA;overflow:hidden}
+.partners-track{display:flex;gap:40px;animation:scrollLogo 30s linear infinite;width:fit-content}
+.partners-track:hover{animation-play-state:paused}
+@keyframes scrollLogo{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.partner-item{flex-shrink:0;width:160px;height:80px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:16px;transition:all .3s;filter:grayscale(100%);opacity:.6}
+.partner-item:hover{filter:grayscale(0);opacity:1;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.news-card{border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.04);transition:all .3s;cursor:pointer}
+.news-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,.1)}
+.news-card-img{height:200px;background-size:cover;background-position:center}
+.news-card-body{padding:20px}
+.news-date{font-size:12px;color:#1E88E5;font-weight:500;margin-bottom:8px}
+.news-card-body h4{font-size:16px;font-weight:700;color:#0A3B5C;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-card-body p{font-size:13px;color:#6B7280;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.video-section{background:#0A3B5C;padding:100px 0}
+.video-section .section-title{color:#fff}
+.video-wrapper{position:relative;max-width:800px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.video-wrapper video{width:100%;display:block}
+.contact{background:#fff}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px}
+.contact-info h3{font-size:24px;font-weight:700;color:#0A3B5C;margin-bottom:24px}
+.contact-info-item{display:flex;gap:16px;margin-bottom:20px;align-items:flex-start}
+.contact-info-item .icon{width:44px;height:44px;background:#E8EFF8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.contact-info-item div{flex:1}
+.contact-info-item .label{font-size:12px;color:#6B7280;font-weight:500;margin-bottom:2px}
+.contact-info-item .value{font-size:15px;color:#1a1a2e;font-weight:500}
+.contact-form{background:#F5F7FA;border-radius:16px;padding:36px}
+.contact-form h3{font-size:20px;font-weight:700;color:#0A3B5C;margin-bottom:24px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:500;color:#4A4A5A;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 16px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;font-family:inherit;color:#1a1a2e;transition:border .3s;background:#fff;outline:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#1E88E5;box-shadow:0 0 0 3px rgba(30,136,229,.1)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-submit{padding:14px 36px;background:#1E88E5;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:all .3s}
+.form-submit:hover{background:#1565C0;transform:translateY(-2px)}
+.footer{background:#0A3B5C;color:rgba(255,255,255,.8);padding:60px 0 30px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.footer-brand .logo{font-size:22px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.footer-brand p{font-size:14px;line-height:1.8;margin-bottom:20px}
+.footer h4{font-size:15px;font-weight:600;color:#fff;margin-bottom:16px}
+.footer-links li{margin-bottom:10px}
+.footer-links a{font-size:14px;transition:color .3s}
+.footer-links a:hover{color:#1E88E5}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;font-size:13px;flex-wrap:wrap;gap:12px}
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:1024px){
+.hero h1{font-size:40px}
+.nav-links{display:none;position:fixed;top:0;right:-300px;width:300px;height:100vh;background:#fff;flex-direction:column;padding:80px 32px;gap:24px;box-shadow:-4px 0 20px rgba(0,0,0,.08);transition:right .3s;z-index:1001}
+.nav-links.open{right:0;display:flex}
+.nav-links a{color:#4A4A5A!important}
+.menu-toggle{display:flex}
+.stats-grid{grid-template-columns:repeat(2,1fr)}
+.services-grid{grid-template-columns:1fr}
+.news-grid{grid-template-columns:1fr}
+.contact-grid{grid-template-columns:1fr}
+.footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+section{padding:60px 0}
+.hero h1{font-size:32px}
+.hero p{font-size:15px}
+.section-title{font-size:28px}
+.stats-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+.stat-card .num{font-size:32px}
+.footer-grid{grid-template-columns:1fr}
+.contact-form{padding:24px}
+.hero-data-num{font-size:26px}
+.nav-cta{display:none}
+}
+.mobile-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);z-index:1000}
+.mobile-overlay.show{display:block}
+.toast{position:fixed;top:20px;right:20px;padding:14px 24px;border-radius:10px;color:#fff;font-size:14px;font-weight:500;z-index:9999;opacity:0;transform:translateY(-10px);transition:all .3s;max-width:360px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast-success{background:#10B981}
+</style></head><body>
+<div id="toast" class="toast"></div>
+<div id="mobileOverlay" class="mobile-overlay" onclick="closeMenu()"></div>
+<nav class="navbar" id="navbar"><div class="container">
+<a href="#" class="logo"><span class="logo-icon">❄️</span><span>恒通冷链</span></a>
+<div class="menu-toggle" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+<div class="nav-links" id="navLinks">
+<a href="#" onclick="closeMenu()">首页</a>
+<a href="#about" onclick="closeMenu()">关于我们</a>
+<a href="#services" onclick="closeMenu()">核心业务</a>
+<a href="#news" onclick="closeMenu()">新闻动态</a>
+<a href="#contact" onclick="closeMenu()">联系我们</a>
+<a href="#contact" class="nav-cta" onclick="closeMenu()">咨询合作</a>
+</div></div></nav>
+<section class="hero" id="hero">
+<div class="hero-bg" id="heroBg" style="background:linear-gradient(135deg,#0a3b5c,#1a5276)"></div>
+<div class="hero-overlay"></div>
+<div class="hero-content">
+<div class="hero-data">
+<div class="hero-data-item"><div class="hero-data-num">100+</div><div class="hero-data-label">合作企业</div></div>
+<div class="hero-data-item"><div class="hero-data-num">50+</div><div class="hero-data-label">冷链车辆</div></div>
+<div class="hero-data-item"><div class="hero-data-num">30+</div><div class="hero-data-label">服务城市</div></div>
+<div class="hero-data-item"><div class="hero-data-num">5万+</div><div class="hero-data-label">年运输量(吨)</div></div></div>
+<h1 id="heroTitle">全程温控 · 安心直达</h1>
+<p id="heroDesc">恒通冷链，专注冷链物流服务，从仓储到配送全程温控可追溯，让每一份托付都安全抵达</p>
+<div class="hero-btns"><a href="#services" class="hero-btn hero-btn-primary">了解服务</a><a href="#contact" class="hero-btn hero-btn-outline">联系我们</a></div>
+</div>
+<div class="scroll-indicator"><span></span></div>
+</section>
+
+<section class="stats" id="stats"><div class="container">
+<div class="stats-grid">
+<div class="stat-card fade-in"><div class="num"><span id="stat1">0</span><span class="unit">㎡</span></div><div class="label">仓储面积</div></div>
+<div class="stat-card fade-in"><div class="num"><span id="stat2">0</span><span class="unit">辆</span></div><div class="label">冷链车辆</div></div>
+<div class="stat-card fade-in"><div class="num"><span id="stat3">0</span><span class="unit">个</span></div><div class="label">服务城市</div></div>
+<div class="stat-card fade-in"><div class="num"><span id="stat4">0</span><span class="unit">吨/年</span></div><div class="label">年运输量</div></div>
+</div></div></section>
+
+<section class="about" id="about"><div class="container"><div class="about-grid">
+<div class="about-image fade-in" id="aboutImg" style="background:linear-gradient(135deg,#E8EFF8,#d0dff0);display:flex;align-items:center;justify-content:center;font-size:64px">🏭</div>
+<div class="about-text fade-in">
+<div class="section-tag">ABOUT</div>
+<h2 class="section-title" id="aboutTitle">关于恒通冷链</h2>
+<div id="aboutContent"><p>恒通冷链物流有限公司，专注于冷链物流服务领域，致力于为客户提供安全、高效、专业的冷链物流解决方案。</p><p>公司拥有现代化冷链仓储设施和专业冷链运输车队，配备先进的温控管理系统，实现全流程温度实时监控与追溯。</p><p>我们始终坚持以客户需求为导向，以品质服务为核心，为生鲜食品、医药制品等温度敏感型产品提供一站式冷链物流服务。</p></div>
+<div class="about-advantages"><div class="about-adv-item">✅ 全链条温控</div><div class="about-adv-item">✅ 实时监控系统</div><div class="about-adv-item">✅ 专业运营团队</div><div class="about-adv-item">✅ 行业资质认证</div></div>
+</div></div></div></section>
+
+<section class="services" id="services"><div class="container">
+<div class="section-tag fade-in">SERVICES</div>
+<h2 class="section-title fade-in">核心业务</h2>
+<p class="section-subtitle fade-in">覆盖冷链物流全链条，提供一站式温控服务解决方案</p>
+<div class="services-grid" id="servicesGrid">
+<div class="service-card fade-in"><div class="service-icon">🚛</div><h4>冷链运输</h4><p>覆盖全国的冷链干线运输网络，多温区运输能力，GPS实时定位追踪，确保货物全程温控。</p><div class="service-tags"><span class="service-tag">干线运输</span><span class="service-tag">支线配送</span><span class="service-tag">多温区</span></div></div>
+<div class="service-card fade-in"><div class="service-icon">🏭</div><h4>冷库仓储</h4><p>现代化冷链仓储设施，提供冷冻、冷藏、恒温等多温区仓储服务，专业库存管理系统。</p><div class="service-tags"><span class="service-tag">冷冻仓储</span><span class="service-tag">冷藏仓储</span><span class="service-tag">恒温存储</span></div></div>
+<div class="service-card fade-in"><div class="service-icon">🚚</div><h4>城市配送</h4><p>覆盖各主要城市的冷链配送网络，B端门店直达配送，准时高效，满足各类配送需求。</p><div class="service-tags"><span class="service-tag">门店配送</span><span class="service-tag">电商配送</span><span class="service-tag">定时达</span></div></div>
+<div class="service-card fade-in"><div class="service-icon">📦</div><h4>增值服务</h4><p>提供分拣、包装、贴标、追溯等一站式增值服务，满足客户多元化需求，提升供应链效率。</p><div class="service-tags"><span class="service-tag">分拣包装</span><span class="service-tag">溯源服务</span><span class="service-tag">定制方案</span></div></div>
+</div></div></section>
+
+<section class="process" id="process"><div class="container">
+<div class="section-tag fade-in">PROCESS</div>
+<h2 class="section-title fade-in">服务流程</h2>
+<p class="section-subtitle fade-in">标准化服务流程，确保每一步都专业可靠</p>
+<div class="process-steps fade-in">
+<div class="process-line"></div>
+<div class="process-step"><div class="step-num">1</div><div class="step-icon">📋</div><h4>客户咨询</h4><p>需求沟通评估</p></div>
+<div class="process-step"><div class="step-num">2</div><div class="step-icon">📝</div><h4>方案定制</h4><p>量身定制方案</p></div>
+<div class="process-step"><div class="step-num">3</div><div class="step-icon">📦</div><h4>上门取货</h4><p>专业包装提货</p></div>
+<div class="process-step"><div class="step-num">4</div><div class="step-icon">🚛</div><h4>冷链运输</h4><p>全程温控运输</p></div>
+<div class="process-step"><div class="step-num">5</div><div class="step-icon">🏭</div><h4>温控仓储</h4><p>专业仓储管理</p></div>
+<div class="process-step"><div class="step-num">6</div><div class="step-icon">🎯</div><h4>末端配送</h4><p>准时送达目标</p></div>
+</div></div></section>
+
+<section class="partners" id="partners"><div class="container">
+<div class="section-tag fade-in">PARTNERS</div>
+<h2 class="section-title fade-in">合作伙伴</h2>
+<p class="section-subtitle fade-in">与众多知名企业建立长期合作关系</p>
+<div class="partners-track" id="partnersTrack">
+<div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业A</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业B</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业C</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业D</div>
+<div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业E</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业F</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业G</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业H</div>
+<div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业A</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业B</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业C</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业D</div>
+<div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业E</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业F</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业G</div><div class="partner-item" style="font-weight:700;color:#0A3B5C">合作企业H</div>
+</div></div></section>
+
+<section class="news" id="news"><div class="container">
+<div class="section-tag fade-in">NEWS</div>
+<h2 class="section-title fade-in">最新动态</h2>
+<p class="section-subtitle fade-in">了解恒通冷链最新资讯</p>
+<div class="news-grid" id="newsGrid">
+<div class="news-card fade-in"><div class="news-card-img" style="background:linear-gradient(135deg,#d4e1f7,#b8cef0);display:flex;align-items:center;justify-content:center;font-size:40px">📰</div><div class="news-card-body"><div class="news-date" id="nDate1">2026-05-15</div><h4 id="nTitle1">恒通冷链成功通过ISO质量管理体系认证</h4><p id="nDesc1">公司正式获得ISO9001质量管理体系认证，标志着管理水平和服务质量迈上新台阶。</p></div></div>
+<div class="news-card fade-in"><div class="news-card-img" style="background:linear-gradient(135deg,#d4e1f7,#b8cef0);display:flex;align-items:center;justify-content:center;font-size:40px">📰</div><div class="news-card-body"><div class="news-date" id="nDate2">2026-04-28</div><h4 id="nTitle2">冷链物流行业发展趋势分享</h4><p id="nDesc2">伴随着新零售和生鲜电商的快速发展，冷链物流行业迎来新的发展机遇。</p></div></div>
+<div class="news-card fade-in"><div class="news-card-img" style="background:linear-gradient(135deg,#d4e1f7,#b8cef0);display:flex;align-items:center;justify-content:center;font-size:40px">📰</div><div class="news-card-body"><div class="news-date" id="nDate3">2026-03-10</div><h4 id="nTitle3">恒通冷链新增冷链运输车辆20台</h4><p id="nDesc3">为满足业务增长需求，公司新增20台冷藏运输车辆，进一步提升配送能力。</p></div></div>
+</div></div></section>
+
+<section class="video-section" id="video"><div class="container">
+<div class="section-tag fade-in" style="color:rgba(255,255,255,.6)">VIDEO</div>
+<h2 class="section-title fade-in">企业宣传</h2>
+<p class="section-subtitle fade-in" style="color:rgba(255,255,255,.5)">感受恒通冷链的专业服务</p>
+<div class="video-wrapper fade-in">
+<video id="promoVideo" controls poster="" preload="none" style="width:100%;display:block"><source src="" type="video/mp4">您的浏览器不支持视频播放</video>
+</div></div></section>
+
+<section class="contact" id="contact"><div class="container">
+<div class="section-tag fade-in">CONTACT</div>
+<h2 class="section-title fade-in">联系我们</h2>
+<p class="section-subtitle fade-in">期待与您的合作，为您提供专业的冷链物流服务</p>
+<div class="contact-grid">
+<div class="contact-info fade-in">
+<h3>联系方式</h3>
+<div class="contact-info-item"><div class="icon">📞</div><div><div class="label">联系电话</div><div class="value" id="contactPhone">0871-XXXXXXX</div></div></div>
+<div class="contact-info-item"><div class="icon">📧</div><div><div class="label">电子邮箱</div><div class="value" id="contactEmail">contact@hengtong-coldchain.com</div></div></div>
+<div class="contact-info-item"><div class="icon">📍</div><div><div class="label">公司地址</div><div class="value" id="contactAddr">云南省昆明市XXXXXXXX路XX号</div></div></div>
+<div class="contact-info-item"><div class="icon">🕐</div><div><div class="label">服务时间</div><div class="value" id="contactHours">周一至周日 8:00-20:00</div></div></div>
+</div>
+<form class="contact-form fade-in" onsubmit="submitForm(event)">
+<h3>在线咨询</h3>
+<div class="form-group"><label>您的姓名 *</label><input type="text" required placeholder="请输入姓名"></div>
+<div class="form-group"><label>联系电话 *</label><input type="tel" required placeholder="请输入电话"></div>
+<div class="form-group"><label>公司名称</label><input type="text" placeholder="请输入公司名称"></div>
+<div class="form-group"><label>服务需求</label><select><option value="">请选择</option><option>冷链运输咨询</option><option>冷库仓储咨询</option><option>城市配送咨询</option><option>其他合作</option></select></div>
+<div class="form-group"><label>留言内容</label><textarea placeholder="请描述您的需求..." rows="3"></textarea></div>
+<button type="submit" class="form-submit">提交咨询</button>
+</form>
+</div></div></section>
+
+<footer class="footer"><div class="container">
+<div class="footer-grid">
+<div class="footer-brand"><div class="logo"><span>❄️</span> 恒通冷链</div><p>专注冷链物流服务，提供一站式温控解决方案。<br>让每一份托付都安全抵达。</p></div>
+<div><h4>快速导航</h4><ul class="footer-links"><li><a href="#about">关于我们</a></li><li><a href="#services">核心业务</a></li><li><a href="#news">新闻动态</a></li><li><a href="#contact">联系我们</a></li></ul></div>
+<div><h4>业务服务</h4><ul class="footer-links"><li><a href="#services">冷链运输</a></li><li><a href="#services">冷库仓储</a></li><li><a href="#services">城市配送</a></li><li><a href="#services">增值服务</a></li></ul></div>
+<div><h4>联系我们</h4><ul class="footer-links"><li>📞 0871-XXXXXXX</li><li>📧 contact@hengtong-coldchain.com</li><li>📍 云南省昆明市</li></ul></div>
+</div>
+<div class="footer-bottom">
+<span id="footerCopyright">© 2026 恒通冷链 All Rights Reserved.</span>
+<span>滇ICP备XXXXXXXX号</span>
+</div></div></footer>
+
+<script>
+var nav=document.getElementById('navbar');
+window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>60)});
+function toggleMenu(){document.getElementById('navLinks').classList.toggle('open');document.getElementById('mobileOverlay').classList.toggle('show')}
+function closeMenu(){document.getElementById('navLinks').classList.remove('open');document.getElementById('mobileOverlay').classList.remove('show')}
+var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.fade-in').forEach(function(e){obs.observe(e)});
+
+// Load data from GitHub data.json, fallback to localStorage
+function loadSiteData(){
+  try{var raw=localStorage.getItem('ht_data');if(raw)return JSON.parse(raw)}catch(e){}
+  return null
+}
+function fetchGitHubData(cb){
+  var x=new XMLHttpRequest();
+  x.open('GET','https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/data.json?_t='+Date.now(),true);
+  x.onreadystatechange=function(){if(x.readyState===4){
+    if(x.status===200||x.status===0){try{cb(JSON.parse(x.responseText));return}catch(e){}}
+    cb(null);
+  }};
+  x.send();
+}
+var d=loadSiteData();
+fetchGitHubData(function(gd){
+  if(gd){
+    // Merge GH data over localStorage data
+    d=gd;
+    // Re-render with GH data
+    renderData(gd);
+    // Stats animation needs to re-init with new numbers
+    reinitStats(gd);
+  }
+});
+renderData(d);
+function renderData(d){
+  // Hero
+  if(d.heroTitle)document.getElementById('heroTitle').textContent=d.heroTitle;
+  if(d.heroDesc)document.getElementById('heroDesc').textContent=d.heroDesc;
+  if(d.heroBtn1)document.querySelector('.hero-btn-primary').textContent=d.heroBtn1;
+  if(d.heroBtn2)document.querySelector('.hero-btn-outline').textContent=d.heroBtn2;
+  if(d.heroBtnLink){document.querySelector('.hero-btn-primary').href=d.heroBtnLink}
+  // Hero bg image
+  if(d.heroBgImg){
+    var hb=document.getElementById('heroBg');
+    hb.style.background='url('+d.heroBgImg+') center/cover no-repeat';
+  }
+  // Hero data
+  var hd=document.querySelectorAll('.hero-data-item');
+  if(d.d1Val&&hd[0])hd[0].querySelector('.hero-data-num').textContent=d.d1Val;
+  if(d.d1Label&&hd[0])hd[0].querySelector('.hero-data-label').textContent=d.d1Label;
+  if(d.d2Val&&hd[1])hd[1].querySelector('.hero-data-num').textContent=d.d2Val;
+  if(d.d2Label&&hd[1])hd[1].querySelector('.hero-data-label').textContent=d.d2Label;
+  if(d.d3Val&&hd[2])hd[2].querySelector('.hero-data-num').textContent=d.d3Val;
+  if(d.d3Label&&hd[2])hd[2].querySelector('.hero-data-label').textContent=d.d3Label;
+  if(d.d4Val&&hd[3])hd[3].querySelector('.hero-data-num').textContent=d.d4Val;
+  if(d.d4Label&&hd[3])hd[3].querySelector('.hero-data-label').textContent=d.d4Label;
+  // Stats
+  if(d.stat1)document.getElementById('stat1').textContent=d.stat1.toLocaleString();
+  if(d.stat2)document.getElementById('stat2').textContent=d.stat2.toLocaleString();
+  if(d.stat3)document.getElementById('stat3').textContent=d.stat3.toLocaleString();
+  if(d.stat4)document.getElementById('stat4').textContent=d.stat4.toLocaleString();
+  // About
+  if(d.aboutTitle)document.getElementById('aboutTitle').textContent=d.aboutTitle;
+  if(d.aboutContent){document.getElementById('aboutContent').innerHTML='<p>'+d.aboutContent.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>'}
+  if(d.aboutImgData){var ai=document.getElementById('aboutImg');ai.style.background='url('+d.aboutImgData+') center/cover no-repeat';ai.innerHTML=''}
+  // Advantages
+  var advs=document.querySelectorAll('.about-adv-item');
+  if(d.adv1&&advs[0])advs[0].innerHTML='✅ '+d.adv1;
+  if(d.adv2&&advs[1])advs[1].innerHTML='✅ '+d.adv2;
+  if(d.adv3&&advs[2])advs[2].innerHTML='✅ '+d.adv3;
+  if(d.adv4&&advs[3])advs[3].innerHTML='✅ '+d.adv4;
+  // Services
+  if(d.services&&d.services.length){
+    var sg=document.getElementById('servicesGrid');
+    var h='';
+    d.services.forEach(function(s){
+      h+='<div class="service-card fade-in"><div class="service-icon">'+s.icon+'</div><h4>'+s.title+'</h4><p>'+s.desc+'</p><div class="service-tags">';
+      s.tags.forEach(function(t){h+='<span class="service-tag">'+t+'</span>'});
+      h+='</div></div>';
+    });
+    sg.innerHTML=h;
+  }
+  // News
+  if(d.news&&d.news.length){
+    var ng=document.getElementById('newsGrid');
+    var h='';
+    d.news.forEach(function(n,i){
+      var imgKey='_img_newsImg_'+i;
+      var imgSrc=d[imgKey];
+      var imgStyle='';
+      if(imgSrc){imgStyle='background:url('+imgSrc+') center/cover no-repeat'}else{imgStyle='background:linear-gradient(135deg,#d4e1f7,#b8cef0);display:flex;align-items:center;justify-content:center;font-size:40px'}
+      var fallback=imgSrc?'':'📰';
+      h+='<div class="news-card fade-in"><div class="news-card-img" style="'+imgStyle+'">'+fallback+'</div><div class="news-card-body"><div class="news-date">'+n.date+'</div><h4>'+n.title+'</h4><p>'+n.desc+'</p></div></div>';
+    });
+    ng.innerHTML=h;
+  }
+  // Video
+  if(d.promoVideoData){
+    var pv=document.getElementById('promoVideo');
+    pv.querySelector('source').src=d.promoVideoData;
+    pv.load();
+  }
+  // Contact
+  if(d.contactPhone)document.getElementById('contactPhone').textContent=d.contactPhone;
+  if(d.contactEmail)document.getElementById('contactEmail').textContent=d.contactEmail;
+  if(d.contactAddr)document.getElementById('contactAddr').textContent=d.contactAddr;
+  if(d.contactHours)document.getElementById('contactHours').textContent=d.contactHours;
+  // Footer
+  if(d.footerCopyright)document.getElementById('footerCopyright').textContent=d.footerCopyright;
+}
+// Re-init stats animation when data comes from GitHub
+function reinitStats(d){
+  var sob=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+    var targets=[d.stat1||20000,d.stat2||50,d.stat3||30,d.stat4||50000];
+    ['stat1','stat2','stat3','stat4'].forEach(function(id,t){
+      var el=document.getElementById(id),target=targets[t],start=null;
+      !function s(ts){if(!start)start=ts;var p=Math.min((ts-start)/2000,1);
+      el.textContent=Math.floor((1-Math.pow(1-p,3))*target).toLocaleString();
+      if(p<1)requestAnimationFrame(s)}(0)
+    });sob.unobserve(e.target)}})},{threshold:.5});
+  var statsSection=document.getElementById('stats');
+  if(statsSection)sob.observe(statsSection);
+}
+
+// Stats animation
+var sob=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+  var targets=[(d&&d.stat1)||20000,(d&&d.stat2)||50,(d&&d.stat3)||30,(d&&d.stat4)||50000];
+  ['stat1','stat2','stat3','stat4'].forEach(function(id,t){
+    var el=document.getElementById(id),target=targets[t],start=null;
+    !function s(ts){if(!start)start=ts;var p=Math.min((ts-start)/2000,1);
+    el.textContent=Math.floor((1-Math.pow(1-p,3))*target).toLocaleString();
+    if(p<1)requestAnimationFrame(s)}(0)
+  });sob.unobserve(e.target)}})},{threshold:.5});
+sob.observe(document.getElementById('stats'));
+
+function submitForm(e){e.preventDefault();var t=document.getElementById('toast');t.className='toast toast-success show';t.textContent='感谢您的咨询，我们会尽快与您联系！';setTimeout(function(){t.classList.remove('show')},3000);e.target.reset()}
+</script>
+</body></html>
