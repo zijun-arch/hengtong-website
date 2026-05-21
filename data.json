@@ -1,0 +1,89 @@
+{
+  "heroTitle": "✅ 全程温控 · 安心直达",
+  "heroDesc": "恒通冷链，专注冷链物流服务，从仓储到配送全程温控可追溯，让每一份托付都安全抵达",
+  "heroBtn1": "了解服务",
+  "heroBtn2": "联系我们",
+  "heroBtnLink": "#services",
+  "d1Label": "合作企业",
+  "d1Val": "200+",
+  "d2Label": "冷链车辆",
+  "d2Val": "80+",
+  "d3Label": "服务城市",
+  "d3Val": "50+",
+  "d4Label": "年运输量(吨)",
+  "d4Val": "10万+",
+  "stat1": 20000,
+  "stat2": 80,
+  "stat3": 50,
+  "stat4": 100000,
+  "aboutTitle": "关于恒通冷链",
+  "aboutContent": "恒通冷链物流有限公司，专注于冷链物流服务领域。\n\n公司拥有现代化的冷链仓储设施和专业冷链运输车队。",
+  "adv1": "全链条温控",
+  "adv2": "实时监控系统",
+  "adv3": "专业运营团队",
+  "adv4": "行业资质认证",
+  "services": [
+    {
+      "icon": "🚛",
+      "title": "冷链运输",
+      "desc": "覆盖全国的冷链干线运输网络。",
+      "tags": [
+        "干线运输",
+        "支线配送",
+        "多温区"
+      ]
+    },
+    {
+      "icon": "🏭",
+      "title": "冷库仓储",
+      "desc": "现代化冷链仓储设施。",
+      "tags": [
+        "冷冻仓储",
+        "冷藏仓储"
+      ]
+    },
+    {
+      "icon": "🚚",
+      "title": "城市配送",
+      "desc": "城市冷链配送网络。",
+      "tags": [
+        "门店配送",
+        "电商配送"
+      ]
+    },
+    {
+      "icon": "📦",
+      "title": "增值服务",
+      "desc": "提供分拣包装贴标等一站式服务。",
+      "tags": [
+        "分拣包装",
+        "溯源服务"
+      ]
+    }
+  ],
+  "news": [
+    {
+      "date": "2026-05-22",
+      "title": "✅ 测试：恒通冷链官网正式上线运营",
+      "desc": "经过精心筹备，恒通冷链官方网站今日正式上线。"
+    },
+    {
+      "date": "2026-05-20",
+      "title": "恒通冷链新增昆明-大理冷链专线",
+      "desc": "为满足滇西地区冷链物流需求，公司开通昆明至大理专线。"
+    },
+    {
+      "date": "2026-05-15",
+      "title": "恒通冷链通过ISO质量管理体系认证",
+      "desc": "公司正式获得ISO9001质量管理体系认证。"
+    }
+  ],
+  "contactPhone": "0871-68888888",
+  "contactEmail": "contact@hengtong-coldchain.com",
+  "contactAddr": "云南省昆明市官渡区XX路恒通冷链大厦",
+  "contactHours": "周一至周日 8:00-20:00",
+  "footerCopyright": "© 2026 恒通冷链 All Rights Reserved.",
+  "footerIcp": "滇ICP备2026000000号",
+  "heroBgGh": "https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/images/test_hero.png",
+  "promoVideoGh": "https://raw.githubusercontent.com/zijun-arch/hengtong-website/main/images/test_video.mp4"
+}
