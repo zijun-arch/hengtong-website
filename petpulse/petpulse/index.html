@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>PetPulse · 宠物AI健康助手</title>
+<meta name="description" content="拍照即测宠物健康，AI智能分析猫咪狗狗身体状况">
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF8C42">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+
+<!-- ============ Toast ============ -->
+<div class="toast" id="toast"></div>
+
+<!-- ============ 页面: 首页 ============ -->
+<div class="page active" id="page-home">
+  <div class="header">
+    <div class="header-title">🐾 PetPulse</div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="showPage('page-settings')">⚙️</button>
+    </div>
+  </div>
+
+  <!-- 宠物选择器 -->
+  <div class="pet-selector" id="petSelector"></div>
+
+  <!-- 快速拍照按钮 -->
+  <div class="quick-scan" onclick="showPage('page-scan')">
+    <div class="quick-scan-left">
+      <h3>📸 快速拍照分析</h3>
+      <p>拍一张照片，AI帮你分析宠物健康</p>
+    </div>
+    <div class="quick-scan-icon">📷</div>
+  </div>
+
+  <!-- 健康指标速览 -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="font-weight:600;font-size:15px">健康指标</span>
+      <span style="font-size:12px;color:var(--text-muted)" id="petStatusHint">暂无最近分析</span>
+    </div>
+    <div class="health-grid" id="healthGrid">
+      <div class="health-card"><div class="icon">🦴</div><div class="score">--</div><div class="label">BCS体况</div></div>
+      <div class="health-card"><div class="icon">✨</div><div class="score">--</div><div class="label">毛发皮肤</div></div>
+      <div class="health-card"><div class="icon">👁️</div><div class="score">--</div><div class="label">眼部</div></div>
+    </div>
+  </div>
+
+  <!-- 最近分析 -->
+  <div class="card">
+    <div style="font-weight:600;font-size:15px;margin-bottom:12px">📋 最近分析</div>
+    <div id="recentScans"><div class="empty-state" style="padding:20px"><p style="font-size:13px;color:var(--text-muted)">还没有分析记录，快去拍照吧 📸</p></div></div>
+  </div>
+</div>
+
+<!-- ============ 页面: 拍照分析 ============ -->
+<div class="page scan-page" id="page-scan">
+  <div class="scan-viewfinder" id="viewfinder">
+    <div class="placeholder" id="scanPlaceholder">
+      <div class="icon">🐾</div>
+      <p>准备好拍照了吗？</p>
+      <p style="font-size:12px;margin-top:8px;opacity:0.6">选择一个宠物开始分析</p>
+    </div>
+    <div class="scan-frame"></div>
+    <img id="scanPreview" style="display:none;width:100%;height:100%;object-fit:cover" alt="preview">
+    <video id="scanVideo" style="display:none;width:100%;height:100%;object-fit:cover" autoplay playsinline></video>
+  </div>
+
+  <div class="scan-controls">
+    <div class="scan-pet-selector" id="scanPetSelector"></div>
+
+    <div class="scan-actions" id="scanActions">
+      <button class="scan-gallery-btn" onclick="pickFromGallery()" id="galleryBtn">🖼️</button>
+      <button class="scan-capture-btn" onclick="capturePhoto()" id="captureBtn">📷</button>
+      <button class="scan-gallery-btn" onclick="retakePhoto()" id="retakeBtn" style="display:none">🔄</button>
+    </div>
+
+    <button class="btn btn-primary btn-block" id="analyzeBtn" style="display:none" onclick="startAnalysis()">
+      🔍 AI分析
+    </button>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+</div>
+
+<!-- ============ AI分析加载覆盖层 ============ -->
+<div class="analyzing-overlay" id="analyzingOverlay">
+  <div class="analyzing-pet-icon" id="analyzePetIcon">🐱</div>
+  <div class="analyzing-title">AI 健康分析中...</div>
+  <div class="analyzing-subtitle" id="analyzePetName">豆豆 · 英国短毛猫</div>
+  <div class="analyzing-progress">
+    <div class="analyzing-step done" id="step0"><span class="step-icon">✓</span> 识别宠物类型</div>
+    <div class="analyzing-step active" id="step1"><span class="step-icon">⏳</span> 分析体态 BCS评分</div>
+    <div class="analyzing-step pending" id="step2"><span class="step-icon">○</span> 检测毛发皮肤</div>
+    <div class="analyzing-step pending" id="step3"><span class="step-icon">○</span> 检查眼部</div>
+    <div class="analyzing-step pending" id="step4"><span class="step-icon">○</span> 分析情绪状态</div>
+    <div class="analyzing-step pending" id="step5"><span class="step-icon">○</span> 生成健康报告</div>
+  </div>
+</div>
+
+<!-- ============ 页面: 分析结果 ============ -->
+<div class="page" id="page-result">
+  <div class="header">
+    <div class="header-title">📊 分析报告</div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="showShareCard()">↗️</button>
+    </div>
+  </div>
+
+  <div class="result-header">
+    <div class="result-pet">
+      <span id="resultPetIcon">🐱</span>
+      <span id="resultPetName">豆豆</span>
+      <span style="font-size:13px;font-weight:400;color:var(--text-secondary)" id="resultPetBreed">英国短毛猫 · 3岁</span>
+    </div>
+    <div class="result-date" id="resultDate">2026-05-22 09:48</div>
+  </div>
+
+  <div class="result-overall">
+    <div class="result-score-ring" id="resultScoreRing">
+      <div class="inner">
+        <div class="num" id="resultOverallScore">7.2</div>
+        <div class="label">/ 10</div>
+      </div>
+    </div>
+    <div class="result-score-label" id="resultOverallLabel">健康状况良好 🎉</div>
+  </div>
+
+  <div id="resultDimensions"></div>
+
+  <div class="suggestion-card" id="resultSuggestion">
+    <h4>💡 综合建议</h4>
+    <p id="resultSuggestionText">豆豆健康状况良好！继续保持日常饮食和运动习惯，建议每月做一次AI健康扫描跟踪变化。</p>
+  </div>
+
+  <button class="btn btn-primary btn-block" onclick="showShareCard()">
+    📸 生成分享卡片
+  </button>
+  <button class="btn btn-secondary btn-block mt-8" onclick="showPage('page-home')">
+    返回首页
+  </button>
+</div>
+
+<!-- ============ 页面: 档案列表 ============ -->
+<div class="page" id="page-profiles">
+  <div class="header">
+    <div class="header-title">📋 宠物档案</div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="showAddPet()">➕</button>
+    </div>
+  </div>
+
+  <div class="profile-list" id="profileList"></div>
+</div>
+
+<!-- ============ 页面: 档案详情 ============ -->
+<div class="page" id="page-profile-detail">
+  <div class="header">
+    <div class="header-title" id="detailHeaderName">宠物档案</div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="editCurrentPet()">✏️</button>
+    </div>
+  </div>
+
+  <div class="profile-detail-header">
+    <div class="avatar-lg" id="detailAvatar">🐱</div>
+    <div class="name-lg" id="detailName">豆豆</div>
+    <div class="breed-lg" id="detailBreed">英国短毛猫</div>
+  </div>
+
+  <div class="card">
+    <div class="info-grid" id="detailInfoGrid"></div>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:600;font-size:15px;margin-bottom:12px">📈 健康趋势</div>
+    <div id="detailHealthTrends">
+      <div class="empty-state" style="padding:20px"><p style="font-size:13px;color:var(--text-muted)">暂无分析数据</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:600;font-size:15px;margin-bottom:12px">📋 分析历史</div>
+    <div id="detailScanHistory"></div>
+  </div>
+</div>
+
+<!-- ============ 页面: 相册 ============ -->
+<div class="page" id="page-album">
+  <div class="header">
+    <div class="header-title" id="albumTitle">📸 宠物相册</div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="uploadToAlbum()">📤</button>
+    </div>
+  </div>
+
+  <div id="albumContent">
+    <div class="empty-state">
+      <div class="icon">📸</div>
+      <h3>记录美好瞬间</h3>
+      <p>上传你家毛孩子的可爱照片吧</p>
+      <button class="btn btn-primary" onclick="uploadToAlbum()">📤 上传照片</button>
+    </div>
+  </div>
+  <input type="file" id="albumFileInput" accept="image/*" multiple style="display:none" onchange="handleAlbumUpload(event)">
+</div>
+
+<!-- ============ 页面: 设置 ============ -->
+<div class="page" id="page-settings">
+  <div class="header">
+    <div class="header-title">⚙️ 设置</div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="showPage('page-home')">✕</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:8px">
+    <div style="font-weight:600;font-size:15px;margin-bottom:12px">👤 账号</div>
+    <div style="font-size:13px;color:var(--text-secondary)">本地数据存储 · 无需登录</div>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:600;font-size:15px;margin-bottom:12px">🐾 我的宠物</div>
+    <div id="settingsPetList"></div>
+    <button class="btn btn-secondary btn-block mt-8" onclick="showAddPet()">➕ 添加宠物</button>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:600;font-size:15px;margin-bottom:12px">📊 数据管理</div>
+    <button class="btn btn-secondary btn-block" onclick="exportData()">💾 导出数据</button>
+    <button class="btn btn-secondary btn-block mt-8" onclick="document.getElementById('importInput').click()">📂 导入数据</button>
+    <input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+
+  <div class="card">
+    <div style="font-weight:600;font-size:15px;margin-bottom:8px">ℹ️ 关于</div>
+    <div style="font-size:13px;color:var(--text-secondary);line-height:1.8">
+      <p>🐾 PetPulse v1.0</p>
+      <p>宠物AI健康助手 — 拍照即测健康</p>
+      <p style="margin-top:4px;font-size:12px">⚠️ 分析结果仅供参考，不替代专业兽医诊断</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 底部Tab栏 ============ -->
+<nav class="tab-bar">
+  <button class="tab-item active" data-page="page-home"><span class="tab-icon">🏠</span><span class="tab-label">首页</span></button>
+  <button class="tab-item" data-page="page-scan"><span class="tab-icon">📷</span><span class="tab-label">拍照</span></button>
+  <button class="tab-item tab-item-center" data-page="page-scan"><span class="tab-icon-wrap">🐾</span><span class="tab-label" style="margin-top:18px">分析</span></button>
+  <button class="tab-item" data-page="page-profiles"><span class="tab-icon">📋</span><span class="tab-label">档案</span></button>
+  <button class="tab-item" data-page="page-album"><span class="tab-icon">📸</span><span class="tab-label">相册</span></button>
+</nav>
+
+<!-- ============ 分享卡片弹出层 ============ -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal-panel">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📸 分享健康卡片</div>
+    <div class="share-card-preview" id="shareCardPreview">
+      <div class="sc-header">🐾 PetPulse · AI健康报告</div>
+      <div class="sc-body" id="shareCardBody">
+        <div class="sc-pet-info">
+          <div class="pet-icon" id="sharePetIcon">🐱</div>
+          <div style="font-weight:600;font-size:16px" id="sharePetName">豆豆</div>
+          <div style="font-size:12px;color:var(--text-secondary)" id="sharePetInfo">英国短毛猫 · 3岁</div>
+        </div>
+        <div class="sc-scores" id="shareScores"></div>
+        <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:12px" id="shareDate">2026-05-22</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block mt-16" onclick="downloadShareCard()">💾 保存图片</button>
+    <button class="btn btn-secondary btn-block mt-8" onclick="closeModal('shareModal')">关闭</button>
+  </div>
+</div>
+
+<!-- ============ 添加宠物弹出层 ============ -->
+<div class="modal-overlay" id="addPetModal">
+  <div class="modal-panel" style="padding-bottom:calc(40px + var(--safe-bottom))">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="addPetTitle">🐾 添加宠物</div>
+
+    <div class="avatar-upload" onclick="document.getElementById('petAvatarInput').click()">
+      <span id="addPetAvatarPreview">🐱</span>
+      <div class="camera-badge">📷</div>
+    </div>
+    <input type="file" id="petAvatarInput" accept="image/*" style="display:none" onchange="previewPetAvatar(event)">
+
+    <div class="pet-type-selector">
+      <button class="pet-type-btn active" data-type="cat" onclick="selectPetType('cat')"><span class="icon">🐱</span>猫咪</button>
+      <button class="pet-type-btn" data-type="dog" onclick="selectPetType('dog')"><span class="icon">🐶</span>狗狗</button>
+    </div>
+
+    <div class="input-group">
+      <label>宠物名字</label>
+      <input class="input-field" id="inputPetName" placeholder="给它起个名字吧" maxlength="20">
+    </div>
+
+    <div class="input-group">
+      <label>品种</label>
+      <input class="input-field" id="inputPetBreed" placeholder="例如：英国短毛猫">
+    </div>
+
+    <div class="input-group">
+      <label>生日</label>
+      <input class="input-field" id="inputPetBirthday" type="date">
+    </div>
+
+    <div class="input-group">
+      <label>性别</label>
+      <div class="option-group">
+        <button class="option-btn active" id="genderMale" onclick="selectGender('male')">🧑 男孩</button>
+        <button class="option-btn" id="genderFemale" onclick="selectGender('female')">👩 女孩</button>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>体重 (kg)</label>
+      <input class="input-field" id="inputPetWeight" type="number" step="0.1" placeholder="例：5.2">
+    </div>
+
+    <div class="input-group">
+      <label>绝育情况</label>
+      <div class="option-group">
+        <button class="option-btn" id="neuteredYes" onclick="selectNeutered('yes')">✅ 已绝育</button>
+        <button class="option-btn active" id="neuteredNo" onclick="selectNeutered('no')">❌ 未绝育</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block mt-16" onclick="savePet()">✅ 保存档案</button>
+    <button class="btn btn-secondary btn-block mt-8" onclick="closeModal('addPetModal')">取消</button>
+  </div>
+</div>
+
+<!-- ============ 导入JS ============ -->
+<script src="js/app.js"></script>
+</body>
+</html>
