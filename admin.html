@@ -267,8 +267,8 @@ var APP_PWD='ht2026';
 var STORAGE_KEY='ht_data';
 var GH_OWNER='zijun-arch';
 var GH_REPO='hengtong-website';
+var GH_TOKEN=''; // login后从localStorage加载
 var GH_BRANCH='main';
-var GH_TOKEN='';
 var defaultServices=[
 {icon:'🚛',title:'冷链运输',desc:'覆盖全国的冷链干线运输网络，多温区运输能力，GPS实时定位追踪，确保货物全程温控。',tags:['干线运输','支线配送','多温区']},
 {icon:'🏭',title:'冷库仓储',desc:'现代化冷链仓储设施，提供冷冻、冷藏、恒温等多温区仓储服务，专业库存管理系统。',tags:['冷冻仓储','冷藏仓储','恒温存储']},
@@ -284,7 +284,7 @@ var uploadCallbacks={};
 function loadData(){try{data=JSON.parse(localStorage.getItem(STORAGE_KEY))||{}}catch(e){data={}};if(!data.services)data.services=JSON.parse(JSON.stringify(defaultServices));if(!data.news)data.news=JSON.parse(JSON.stringify(defaultNews))}
 function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
 function toast(m,t){var e=document.getElementById('toast');e.className='toast toast-'+t+' show';e.textContent=m;setTimeout(function(){e.classList.remove('show')},3000)}
-function handleLogin(e){e.preventDefault();if(document.getElementById('pwdInput').value===APP_PWD){document.getElementById('loginPanel').style.display='none';document.getElementById('adminLayout').style.display='block';document.getElementById('pwdInput').value='';var t1='ghp_UpHVU',t2='BLvuU7nCXNlAP8jkbdjQKIW0Z3NFVlb';GH_TOKEN=localStorage.getItem('ht_token')||'';if(!GH_TOKEN){GH_TOKEN=t1+t2;localStorage.setItem('ht_token',GH_TOKEN)}initAdmin()}else{document.getElementById('loginErr').style.display='block'}return false}
+function handleLogin(e){e.preventDefault();if(document.getElementById('pwdInput').value===APP_PWD){var t1='ghp_UpHVU',t2='BLvuU7nCXNlAP8jkbdjQKIW0Z3NFVlb';GH_TOKEN=localStorage.getItem('ht_token')||'';if(!GH_TOKEN){GH_TOKEN=t1+t2;localStorage.setItem('ht_token',GH_TOKEN)}document.getElementById('loginPanel').style.display='none';document.getElementById('adminLayout').style.display='block';document.getElementById('pwdInput').value='';initAdmin()}else{document.getElementById('loginErr').style.display='block'}return false}
 function handleLogout(){document.getElementById('loginPanel').style.display='flex';document.getElementById('adminLayout').style.display='none'}
 
 document.querySelectorAll('.sidebar-nav a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();document.querySelectorAll('.sidebar-nav a').forEach(function(x){x.classList.remove('active')});this.classList.add('active');document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});var tb=document.getElementById('tab-'+this.dataset.tab);if(tb)tb.classList.add('active');document.getElementById('pageTitle').textContent=this.textContent.trim()})});
@@ -365,7 +365,7 @@ else if(x.status===422){toast('GitHub: 路径无效','error');cb(null)}
 else{var msg='';try{var e=JSON.parse(x.responseText);msg=e.message}catch(e){msg=x.responseText}toast('GitHub上传失败: '+msg,'error');cb(null)}
 }};
 x.send(JSON.stringify({message:'Upload '+path,content:base64Data.split(',').pop()||base64Data,branch:GH_BRANCH}));
-})
+}
 
 function renderSingleUpload(key,src){
 var container=document.getElementById('upload-'+key);
@@ -394,7 +394,7 @@ container.classList.remove('has-img');
 container.innerHTML='<div class="upload-icon">'+(key==='promoVideo'?'🎬':'🖼️')+'</div><div class="placeholder">点击上传'+(key==='promoVideo'?'视频':'图片')+'</div>';
 }
 
-function aboutImgData);
+function loadBannerImages(){
 if(data.promoVideoData)renderSingleUpload('promoVideo',data.promoVideoData);
 }
 
@@ -443,8 +443,6 @@ var gk='_gh_newsImg_'+i;var lk='_local_newsImg_'+i;
 if(data[gk])pd[gk]=data[gk];if(data[lk])pd[lk]=data[lk];
 })}
 var js=JSON.stringify(pd,null,2);
-
-// Get current sha first
 var getUrl='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/data.json?ref='+GH_BRANCH;
 var getX=new XMLHttpRequest();getX.open('GET',getUrl,true);
 getX.setRequestHeader('Authorization','token '+GH_TOKEN);
