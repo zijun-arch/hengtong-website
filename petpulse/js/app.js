@@ -642,7 +642,6 @@ function renderAlbum() {
 
 function uploadToAlbum() { document.getElementById('albumFileInput').click(); }
 
-function handleAlbum
 function handleAlbumUpload(event) {
   var files = event.target.files;
   if (!files || files.length===0) return;
